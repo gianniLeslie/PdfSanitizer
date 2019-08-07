@@ -220,37 +220,6 @@ class cPDFDate:
                     self.state = 0
                     return None
 
-def fEntropy(countByte, countTotal):
-    x = float(countByte) / countTotal
-    if x > 0:
-        return - x * math.log(x, 2)
-    else:
-        return 0.0
-
-class cEntropy:
-    def __init__(self):
-        self.allBucket = [0 for i in range(0, 256)]
-        self.streamBucket = [0 for i in range(0, 256)]
-
-    def add(self, byte, insideStream):
-        self.allBucket[byte] += 1
-        if insideStream:
-            self.streamBucket[byte] += 1
-
-    def removeInsideStream(self, byte):
-        if self.streamBucket[byte] > 0:
-            self.streamBucket[byte] -= 1
-
-    def calc(self):
-        self.nonStreamBucket = map(operator.sub, self.allBucket, self.streamBucket)
-        allCount = sum(self.allBucket)
-        streamCount = sum(self.streamBucket)
-        nonStreamCount = sum(self.nonStreamBucket)
-        if streamCount == 0:
-            return (allCount, sum(map(lambda x: fEntropy(x, allCount), self.allBucket)), streamCount, None, nonStreamCount, sum(map(lambda x: fEntropy(x, nonStreamCount), self.nonStreamBucket)))
-        else:
-            return (allCount, sum(map(lambda x: fEntropy(x, allCount), self.allBucket)), streamCount, sum(map(lambda x: fEntropy(x, streamCount), self.streamBucket)), nonStreamCount, sum(map(lambda x: fEntropy(x, nonStreamCount), self.nonStreamBucket)))
-
 class cPDFEOF:
     def __init__(self):
         self.token = ''
@@ -356,23 +325,6 @@ class cCVE_2009_3459:
         if (lastName == '/Colors' and word.isdigit() and int(word) > 2^24): # decided to alert when the number of colors is expressed with more than 3 bytes
             self.count += 1
 
-def XMLAddAttribute(xmlDoc, name, value=None):
-    att = xmlDoc.createAttribute(name)
-    xmlDoc.documentElement.setAttributeNode(att)
-    if value != None:
-        att.nodeValue = value
-    return att
-
-def ParseINIFile():
-    oConfigParser = ConfigParser.ConfigParser(allow_no_value=True)
-    oConfigParser.optionxform = str
-    oConfigParser.read(os.path.join(os.path.dirname(sys.argv[0]), 'pdfid.ini'))
-    keywords = []
-    if oConfigParser.has_section('keywords'):
-        for key, value in oConfigParser.items('keywords'):
-            if not key in keywords:
-                keywords.append(key)
-    return keywords
 
 def PDFiD(file, allNames=False, extraData=False, disarm=False, force=False):
     """Example of XML output:
@@ -441,10 +393,6 @@ def PDFiD(file, allNames=False, extraData=False, disarm=False, force=False):
 
         (pathfile, extension) = os.path.splitext(file)
         fOut = open(pathfile + '.disarmed' + extension, 'wb')
-
-        if oEntropy != None:
-            for byteHeader in bytesHeader:
-                oEntropy.add(byteHeader, insideStream)
 
         byte = oBinaryFile.byte()
         while byte != None:
@@ -517,98 +465,6 @@ def PDFiD(file, allNames=False, extraData=False, disarm=False, force=False):
 
     fOut.close()
 
-   
-    if oPDFEOF != None:
-        attCountEOF.nodeValue = '%d' % oPDFEOF.cntEOFs
-        if oPDFEOF.cntEOFs > 0:
-            attCountCharsAfterLastEOF.nodeValue = '%d' % oPDFEOF.cntCharsAfterLastEOF
-        else:
-            attCountCharsAfterLastEOF.nodeValue = ''
-    else:
-        attCountEOF.nodeValue = ''
-        attCountCharsAfterLastEOF.nodeValue = ''
-
-    eleKeywords = xmlDoc.createElement('Keywords')
-    xmlDoc.documentElement.appendChild(eleKeywords)
-    for keyword in keywords:
-        eleKeyword = xmlDoc.createElement('Keyword')
-        eleKeywords.appendChild(eleKeyword)
-        att = xmlDoc.createAttribute('Name')
-        att.nodeValue = keyword
-        eleKeyword.setAttributeNode(att)
-        att = xmlDoc.createAttribute('Count')
-        att.nodeValue = str(words[keyword][0])
-        eleKeyword.setAttributeNode(att)
-        att = xmlDoc.createAttribute('HexcodeCount')
-        att.nodeValue = str(words[keyword][1])
-        eleKeyword.setAttributeNode(att)
-    eleKeyword = xmlDoc.createElement('Keyword')
-    eleKeywords.appendChild(eleKeyword)
-    att = xmlDoc.createAttribute('Name')
-    att.nodeValue = '/Colors > 2^24'
-    eleKeyword.setAttributeNode(att)
-    att = xmlDoc.createAttribute('Count')
-    att.nodeValue = str(oCVE_2009_3459.count)
-    eleKeyword.setAttributeNode(att)
-    att = xmlDoc.createAttribute('HexcodeCount')
-    att.nodeValue = str(0)
-    eleKeyword.setAttributeNode(att)
-    if allNames:
-        keys = sorted(words.keys())
-        for word in keys:
-            if not word in keywords:
-                eleKeyword = xmlDoc.createElement('Keyword')
-                eleKeywords.appendChild(eleKeyword)
-                att = xmlDoc.createAttribute('Name')
-                att.nodeValue = word
-                eleKeyword.setAttributeNode(att)
-                att = xmlDoc.createAttribute('Count')
-                att.nodeValue = str(words[word][0])
-                eleKeyword.setAttributeNode(att)
-                att = xmlDoc.createAttribute('HexcodeCount')
-                att.nodeValue = str(words[word][1])
-                eleKeyword.setAttributeNode(att)
-    eleDates = xmlDoc.createElement('Dates')
-    xmlDoc.documentElement.appendChild(eleDates)
-    dates.sort(key=lambda x: x[0])
-    for date in dates:
-        eleDate = xmlDoc.createElement('Date')
-        eleDates.appendChild(eleDate)
-        att = xmlDoc.createAttribute('Value')
-        att.nodeValue = date[0]
-        eleDate.setAttributeNode(att)
-        att = xmlDoc.createAttribute('Name')
-        att.nodeValue = date[1]
-        eleDate.setAttributeNode(att)
-    return xmlDoc
-
-def PDFiD2String(xmlDoc, nozero, force):
-    result = 'PDFiD %s %s\n' % (xmlDoc.documentElement.getAttribute('Version'), xmlDoc.documentElement.getAttribute('Filename'))
-    if xmlDoc.documentElement.getAttribute('ErrorOccured') == 'True':
-        return result + '***Error occured***\n%s\n' % xmlDoc.documentElement.getAttribute('ErrorMessage')
-    if not force and xmlDoc.documentElement.getAttribute('IsPDF') == 'False':
-        return result + ' Not a PDF document\n'
-    result += ' PDF Header: %s\n' % xmlDoc.documentElement.getAttribute('Header')
-    for node in xmlDoc.documentElement.getElementsByTagName('Keywords')[0].childNodes:
-        if not nozero or nozero and int(node.getAttribute('Count')) > 0:
-            result += ' %-16s %7d' % (node.getAttribute('Name'), int(node.getAttribute('Count')))
-            if int(node.getAttribute('HexcodeCount')) > 0:
-                result += '(%d)' % int(node.getAttribute('HexcodeCount'))
-            result += '\n'
-    if xmlDoc.documentElement.getAttribute('CountEOF') != '':
-        result += ' %-16s %7d\n' % ('%%EOF', int(xmlDoc.documentElement.getAttribute('CountEOF')))
-    if xmlDoc.documentElement.getAttribute('CountCharsAfterLastEOF') != '':
-        result += ' %-16s %7d\n' % ('After last %%EOF', int(xmlDoc.documentElement.getAttribute('CountCharsAfterLastEOF')))
-    for node in xmlDoc.documentElement.getElementsByTagName('Dates')[0].childNodes:
-        result += ' %-23s %s\n' % (node.getAttribute('Value'), node.getAttribute('Name'))
-    if xmlDoc.documentElement.getAttribute('TotalEntropy') != '':
-        result += ' Total entropy:           %s (%10s bytes)\n' % (xmlDoc.documentElement.getAttribute('TotalEntropy'), xmlDoc.documentElement.getAttribute('TotalCount'))
-    if xmlDoc.documentElement.getAttribute('StreamEntropy') != '':
-        result += ' Entropy inside streams:  %s (%10s bytes)\n' % (xmlDoc.documentElement.getAttribute('StreamEntropy'), xmlDoc.documentElement.getAttribute('StreamCount'))
-    if xmlDoc.documentElement.getAttribute('NonStreamEntropy') != '':
-        result += ' Entropy outside streams: %s (%10s bytes)\n' % (xmlDoc.documentElement.getAttribute('NonStreamEntropy'), xmlDoc.documentElement.getAttribute('NonStreamCount'))
-    return result
-
 class cCount():
     def __init__(self, count, hexcode):
         self.count = count
@@ -670,10 +526,6 @@ def Quote(value, separator, quote):
             return quote + value + quote
     return value
 
-def MakeCSVLine(fields, separator=';', quote='"'):
-    formatstring = separator.join([field[0] for field in fields])
-    strings = [Quote(field[1], separator, quote) for field in fields]
-    return formatstring % tuple(strings)
 
 def ProcessFile(filename, options, plugins):
     xmlDoc = PDFiD(filename, options.all, options.extra, options.disarm, options.force)
@@ -736,64 +588,6 @@ def ProcessFile(filename, options, plugins):
                 else:
                     Print(PDFiD2String(xmlDoc, options.nozero, options.force), options)
 
-
-def Scan(directory, options, plugins):
-    try:
-        if os.path.isdir(directory):
-            for entry in os.listdir(directory):
-                Scan(os.path.join(directory, entry), options, plugins)
-        else:
-            ProcessFile(directory, options, plugins)
-    except Exception as e:
-#        print directory
-        print(e)
-#        print(sys.exc_info()[2])
-#        print traceback.format_exc()
-
-#function derived from: http://blog.9bplus.com/pdfidpy-output-to-json
-def PDFiD2JSON(xmlDoc, force):
-    #Get Top Layer Data
-    errorOccured = xmlDoc.documentElement.getAttribute('ErrorOccured')
-    errorMessage = xmlDoc.documentElement.getAttribute('ErrorMessage')
-    filename = xmlDoc.documentElement.getAttribute('Filename')
-    header = xmlDoc.documentElement.getAttribute('Header')
-    isPdf = xmlDoc.documentElement.getAttribute('IsPDF')
-    version = xmlDoc.documentElement.getAttribute('Version')
-    entropy = xmlDoc.documentElement.getAttribute('Entropy')
-
-    #extra data
-    countEof = xmlDoc.documentElement.getAttribute('CountEOF')
-    countChatAfterLastEof = xmlDoc.documentElement.getAttribute('CountCharsAfterLastEOF')
-    totalEntropy = xmlDoc.documentElement.getAttribute('TotalEntropy')
-    streamEntropy = xmlDoc.documentElement.getAttribute('StreamEntropy')
-    nonStreamEntropy = xmlDoc.documentElement.getAttribute('NonStreamEntropy')
-
-    keywords = []
-    dates = []
-
-    #grab all keywords
-    for node in xmlDoc.documentElement.getElementsByTagName('Keywords')[0].childNodes:
-        name = node.getAttribute('Name')
-        count = int(node.getAttribute('Count'))
-        if int(node.getAttribute('HexcodeCount')) > 0:
-            hexCount = int(node.getAttribute('HexcodeCount'))
-        else:
-            hexCount = 0
-        keyword = { 'count':count, 'hexcodecount':hexCount, 'name':name }
-        keywords.append(keyword)
-
-    #grab all date information
-    for node in xmlDoc.documentElement.getElementsByTagName('Dates')[0].childNodes:
-        name = node.getAttribute('Name')
-        value = node.getAttribute('Value')
-        date = { 'name':name, 'value':value }
-        dates.append(date)
-
-    data = { 'countEof':countEof, 'countChatAfterLastEof':countChatAfterLastEof, 'totalEntropy':totalEntropy, 'streamEntropy':streamEntropy, 'nonStreamEntropy':nonStreamEntropy, 'errorOccured':errorOccured, 'errorMessage':errorMessage, 'filename':filename, 'header':header, 'isPdf':isPdf, 'version':version, 'entropy':entropy, 'keywords': { 'keyword': keywords }, 'dates': { 'date':dates} }
-    complete = [ { 'pdfid' : data} ]
-    result = json.dumps(complete)
-    return result
-
 def File2Strings(filename):
     try:
         f = open(filename, 'r')
@@ -816,10 +610,6 @@ def ProcessAt(argument):
     else:
         return [argument]
 
-def AddPlugin(cClass):
-    global plugins
-
-    plugins.append(cClass)
 
 class cExpandFilenameArguments():
     def __init__(self, filenames, literalfilenames=False, recursedir=False, checkfilenames=False, expressionprefix=None):
@@ -908,94 +698,3 @@ class cExpandFilenameArguments():
             return [filename for filename, expression in self.filenameexpressions]
         else:
             return self.filenameexpressions
-
-class cPluginParent():
-    onlyValidPDF = True
-
-def LoadPlugins(plugins, verbose):
-    if plugins == '':
-        return
-    scriptPath = os.path.dirname(sys.argv[0])
-    for plugin in sum(map(ProcessAt, plugins.split(',')), []):
-        try:
-            if not plugin.lower().endswith('.py'):
-                plugin += '.py'
-            if os.path.dirname(plugin) == '':
-                if not os.path.exists(plugin):
-                    scriptPlugin = os.path.join(scriptPath, plugin)
-                    if os.path.exists(scriptPlugin):
-                        plugin = scriptPlugin
-            exec(open(plugin, 'r').read())
-        except Exception as e:
-            print('Error loading plugin: %s' % plugin)
-            if verbose:
-                raise e
-
-def PDFiDMain(filenames, options):
-    global plugins
-    plugins = []
-    LoadPlugins(options.plugins, options.verbose)
-
-    if options.csv:
-        if plugins != []:
-            Print(MakeCSVLine((('%s', 'Filename'), ('%s', 'Plugin-name'), ('%s', 'Score'))), options)
-        elif options.select != '':
-            Print('Filename', options)
-
-    for filename in filenames:
-        if options.scan:
-            Scan(filename, options, plugins)
-        else:
-            ProcessFile(filename, options, plugins)
-
-def Main():
-    moredesc = '''
-
-Arguments:
-pdf-file and zip-file can be a single file, several files, and/or @file
-@file: run PDFiD on each file listed in the text file specified
-wildcards are supported
-
-Source code put in the public domain by Didier Stevens, no Copyright
-Use at your own risk
-https://DidierStevens.com'''
-
-    oParser = optparse.OptionParser(usage='usage: %prog [options] [pdf-file|zip-file|url|@file] ...\n' + __description__ + moredesc, version='%prog ' + __version__)
-    oParser.add_option('-s', '--scan', action='store_true', default=False, help='scan the given directory')
-    oParser.add_option('-a', '--all', action='store_true', default=False, help='display all the names')
-    oParser.add_option('-e', '--extra', action='store_true', default=False, help='display extra data, like dates')
-    oParser.add_option('-f', '--force', action='store_true', default=False, help='force the scan of the file, even without proper %PDF header')
-    oParser.add_option('-d', '--disarm', action='store_true', default=False, help='disable JavaScript and auto launch')
-    oParser.add_option('-p', '--plugins', type=str, default='', help='plugins to load (separate plugins with a comma , ; @file supported)')
-    oParser.add_option('-c', '--csv', action='store_true', default=False, help='output csv data when using plugins')
-    oParser.add_option('-m', '--minimumscore', type=float, default=0.0, help='minimum score for plugin results output')
-    oParser.add_option('-v', '--verbose', action='store_true', default=False, help='verbose (will also raise catched exceptions)')
-    oParser.add_option('-S', '--select', type=str, default='', help='selection expression')
-    oParser.add_option('-n', '--nozero', action='store_true', default=False, help='supress output for counts equal to zero')
-    oParser.add_option('-o', '--output', type=str, default='', help='output to log file')
-    oParser.add_option('--pluginoptions', type=str, default='', help='options for the plugin')
-    oParser.add_option('-l', '--literalfilenames', action='store_true', default=False, help='take filenames literally, no wildcard matching')
-    oParser.add_option('--recursedir', action='store_true', default=False, help='Recurse directories (wildcards and here files (@...) allowed)')
-    (options, args) = oParser.parse_args()
-
-    if len(args) == 0:
-        if options.disarm:
-            print('Option disarm not supported with stdin')
-            options.disarm = False
-        if options.scan:
-            print('Option scan not supported with stdin')
-            options.scan = False
-        filenames = ['']
-    else:
-        try:
-            oExpandFilenameArguments = cExpandFilenameArguments(args, options.literalfilenames, options.recursedir, False)
-            filenames = oExpandFilenameArguments.Filenames()
-            if oExpandFilenameArguments.warning:
-                print(oExpandFilenameArguments.message)
-        except Exception as e:
-            print(e)
-            return
-    PDFiDMain(filenames, options)
-
-if __name__ == '__main__':
-    Main()

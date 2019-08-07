@@ -7,6 +7,8 @@ namespace PDFSanitizer
 {
     public static class Utilities
     {
+        public static readonly ASCIIEncoding Encoding = new ASCIIEncoding();
+
         public static string SwapName(string word)
         {
             return String.Empty;

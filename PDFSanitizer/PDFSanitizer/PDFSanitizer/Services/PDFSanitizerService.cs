@@ -15,13 +15,14 @@ namespace PDFSanitizer.Services
         private string slash = "";
         private bool _insideStream;
         private bool _hexCode;
+        private char digit1;
+        private char digit2;
         private Dictionary<string, IEnumerable<int>> _words;
         private readonly IEnumerable<string> keywords = new List<string> {"obj", "endobj", "stream", "endstream", "xref", "trailer", "startxref", 
             "/Page", "/Encrypt", "ObjStm", "/JS", "/JavaScript", "/AA", "/OpenAction", "AcroForm", "JBIG2Decode", "RichMedia", "Launch", "EmbeddedFile", "/XFA"}; 
 
         public PDFSanitizerService()
         {
-
         }
     }
 
