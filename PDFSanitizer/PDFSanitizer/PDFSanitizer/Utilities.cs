@@ -9,7 +9,7 @@ namespace PDFSanitizer
     {
         public static readonly ASCIIEncoding Encoding = new ASCIIEncoding();
 
-        public static string SwapName(string word)
+        public static string SwapName(List<char> wordExact)
         {
             return String.Empty;
         }
@@ -24,20 +24,9 @@ namespace PDFSanitizer
             return Encoding.GetString(new byte[] {b});
         }
 
-        public static void UpdateWords(string word, string wordExact, bool slash, List<string> words, bool hexcode,
-            object allNames, object insideStream, object outputFile)
+        public static byte[] StringToBytes(string word)
         {
-
-        }
-
-        public static string HexcodeToString(byte [] bytes)
-        {
-            return String.Empty;
-        }
-
-        public static IEnumerable<byte> StringToBytes(string words)
-        {
-            return Enumerable.Empty<byte>();
+            return Encoding.GetBytes(word);
         }
     }
 }
