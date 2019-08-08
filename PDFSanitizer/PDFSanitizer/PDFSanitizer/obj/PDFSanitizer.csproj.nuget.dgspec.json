@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GIT\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj": {}
+    "C:\\GIT\\PdfSanitizer(1)\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj": {}
   },
   "projects": {
-    "C:\\GIT\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj": {
+    "C:\\GIT\\PdfSanitizer(1)\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GIT\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj",
+        "projectUniqueName": "C:\\GIT\\PdfSanitizer(1)\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj",
         "projectName": "PDFSanitizer",
-        "projectPath": "C:\\GIT\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj",
+        "projectPath": "C:\\GIT\\PdfSanitizer(1)\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer.csproj",
         "packagesPath": "C:\\Users\\gianni.leslie\\.nuget\\packages\\",
-        "outputPath": "C:\\GIT\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\obj\\",
+        "outputPath": "C:\\GIT\\PdfSanitizer(1)\\PDFSanitizer\\PDFSanitizer\\PDFSanitizer\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -43,6 +43,10 @@
       "frameworks": {
         "netcoreapp2.1": {
           "dependencies": {
+            "AWSSDK.S3": {
+              "target": "Package",
+              "version": "[3.3.104.10, )"
+            },
             "Amazon.Lambda.Core": {
               "target": "Package",
               "version": "[1.1.0, )"
