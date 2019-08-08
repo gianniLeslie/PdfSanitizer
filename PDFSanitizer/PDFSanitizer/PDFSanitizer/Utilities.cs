@@ -11,12 +11,14 @@ namespace PDFSanitizer
 
         public static string SwapName(List<char> wordExact)
         {
-            return String.Empty;
+            string output = string.Empty;
+            wordExact.ForEach(o => output.Append(SwapCase(o)));
+            return output;
         }
 
         public static char SwapCase(char character)
         {
-            return character;
+            return $"{character}".ToUpper().FirstOrDefault();
         }
 
         public static string ByteToString(byte b)

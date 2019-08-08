@@ -1,0 +1,5 @@
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.csprojAssemblyReference.cache
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.csproj.CoreCompileInputs.cache
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.AssemblyInfoInputs.cache
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.AssemblyInfo.cs

@@ -23,7 +23,7 @@ namespace PDFSanitizer.Services
             _convertedFileDirectory = convertedFileDirectory;
         }
 
-        public string SanitizePdf(string fileUrl, string convertedGetUrl, string convertedPutUrl)
+        public string SanitizePdf(string fileUrl)
         {
             //Setup
             PDFInfoModel pdfInfo = new PDFInfoModel
@@ -40,7 +40,7 @@ namespace PDFSanitizer.Services
             byte? digit2 = null;
 
             string _outputFilePath = $"{_convertedFileDirectory}/{fileId}.disarmed.pdf";
-            Dictionary<string, IEnumerable<int>> _words;
+
             //Get source file
             var rawFileManager = new FileManager(fileUrl, fileId, _rawFileDirectory);
             try
