@@ -391,7 +391,7 @@ def PDFiD(file, allNames=False, extraData=False, disarm=False, force=False):
     try:
         oBinaryFile = cBinaryFile(file)
 
-        (pathfile, extension) = os.path.splitext(file)
+        (pathfile, extension) = os.path.splitext()
         fOut = open(pathfile + '.disarmed' + extension, 'wb')
 
         byte = oBinaryFile.byte()
@@ -419,13 +419,11 @@ def PDFiD(file, allNames=False, extraData=False, disarm=False, force=False):
                         oBinaryFile.unget(d2)
                         oBinaryFile.unget(d1)
                         (word, wordExact, hexcode, lastName, insideStream) = UpdateWords(word, wordExact, slash, words, hexcode, allNames, lastName, insideStream, oEntropy, fOut)
-                        if disarm:
-                            fOut.write(C2BIP3(char))
+                        fOut.write(C2BIP3(char))
                 else:
                     oBinaryFile.unget(d1)
                     (word, wordExact, hexcode, lastName, insideStream) = UpdateWords(word, wordExact, slash, words, hexcode, allNames, lastName, insideStream, oEntropy, fOut)
-                    if disarm:
-                        fOut.write(C2BIP3(char))
+                    fOut.write(C2BIP3(char))
             else:
                 oCVE_2009_3459.Check(lastName, word)
 

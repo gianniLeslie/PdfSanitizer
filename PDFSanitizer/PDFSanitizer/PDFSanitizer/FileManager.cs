@@ -9,42 +9,38 @@ namespace PDFSanitizer
 {
     public class FileManager
     {
-        public List<byte> Ungetted { get; set; }
-        public string ConvertedGetUrl { get; set; }
-        public string ConvertedPutUrl { get; set; }
+        private List<byte> _ungetted;
         public string FileName { get; set; }
-        private Guid _fileId { get; set; }
-        private int _fileIndex { get; set; }
-        private long _fileSize { get; set; }
+        private Guid _fileId;
+        private int _fileIndex;
+        private long _fileSize;
+        private string _fileLocation;
         private FileStream _inputStream;
 
-        public FileManager(string fileUrl, string rawPDFDir, string convertedPDFDir, string convertedGetUrl, string convertedPutUrl)
+        public FileManager(string fileUrl, Guid fileId, string rawPDFDir)
         {
-            _fileId = Guid.NewGuid();
+            _fileId = fileId;
             _fileIndex = 0;
-           
-            ConvertedGetUrl = convertedGetUrl;
-            ConvertedPutUrl = convertedPutUrl;
             if (!String.IsNullOrEmpty(fileUrl))
             {
-                string rawFileLocation = $"{rawPDFDir}/{_fileId}";
+                _fileLocation = $"{rawPDFDir}/{_fileId}";
                 try
                 {
                     using (var webClient = new WebClient())
                     {
-                        webClient.DownloadFile(fileUrl, rawFileLocation);
+                        webClient.DownloadFile(fileUrl, _fileLocation);
                     }
 
-                    _inputStream = File.OpenRead(rawFileLocation);
+                    _inputStream = File.OpenRead(_fileLocation);
                     _fileSize = _inputStream?.Length ?? 0;
                 }
                 catch (FileNotFoundException e)
                 {
-                    Console.WriteLine($"Could not find file at the specified location. FileLocation: {rawFileLocation}");
+                    Console.Write($"Could not find file at the specified location. FileLocation: {_fileLocation}");
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"Something went wrong while trying to download the file to {rawFileLocation}" +
+                    Console.Write($"Something went wrong while trying to download the file to {_fileLocation}" +
                                       $"Url: {fileUrl} " +
                                       $"Exception Message: {e.Message} " +
                                       $"StackTrace: {e.StackTrace}");
@@ -54,11 +50,11 @@ namespace PDFSanitizer
 
         public byte? GetByte()
         {
-            var lastIndex = Ungetted.Count - 1;
+            var lastIndex = _ungetted.Count - 1;
             if (lastIndex < 0)
             {
-                byte lastUngettedByte = Ungetted[lastIndex];
-                Ungetted.RemoveAt(lastUngettedByte);
+                byte lastUngettedByte = _ungetted[lastIndex];
+                _ungetted.RemoveAt(lastUngettedByte);
                 return lastUngettedByte;
             }
 
@@ -74,38 +70,53 @@ namespace PDFSanitizer
         public IEnumerable<byte> GetBytes(int size)
         {
             List<byte> result;
-            if (size <= Ungetted.Count())
+            if (size <= _ungetted.Count())
             {
-                result = Ungetted.GetRange(_fileIndex, size);
-                Ungetted.RemoveRange(_fileIndex, size);
+                result = _ungetted.GetRange(_fileIndex, size);
+                _ungetted.RemoveRange(_fileIndex, size);
                 return result;
             }
 
             var nextBytes = new byte[size];
-            int countBytesRead = _inputStream.Read(nextBytes, 0, size - Ungetted.Count);
+            int countBytesRead = _inputStream.Read(nextBytes, 0, size - _ungetted.Count);
             if (countBytesRead == 0)
             {
                 _inputStream.Close();
             }
 
-            Ungetted.AddRange(nextBytes);
-            result = Ungetted;
-            Ungetted = new List<byte>();
+            _ungetted.AddRange(nextBytes);
+            result = _ungetted;
+            _ungetted = new List<byte>();
             return result;
         }
 
-        public void Unget(byte inByte)
+        public void Unget(byte? inByte)
         {
-            Ungetted.Add(inByte);
+            if(inByte != null)
+            {
+                _ungetted.Add((byte) inByte);
+            }
         }
 
         public void Ungets(IEnumerable<byte> inBytes)
         {
-            Ungetted.Reverse();
-            Ungetted.AddRange(inBytes);
+            _ungetted.Reverse();
+            _ungetted.AddRange(inBytes);
         }
         public bool DeleteFile()
         {
+            try
+            {
+                File.Delete(_fileLocation);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.Write($"Unable to delete file at {_fileLocation}." +
+                                  $" Exception Message: {e.Message} " +
+                                  $"StackTrace: {e.StackTrace}");
+            }
+
             return false;
         }
     }

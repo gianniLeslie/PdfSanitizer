@@ -18,6 +18,12 @@ namespace PDFSanitizer
         {
             return character;
         }
+
+        public static string ByteToString(byte b)
+        {
+            return Encoding.GetString(new byte[] {b});
+        }
+
         public static void UpdateWords(string word, string wordExact, bool slash, List<string> words, bool hexcode,
             object allNames, object insideStream, object outputFile)
         {
