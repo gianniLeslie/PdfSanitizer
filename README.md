@@ -1,9 +1,6 @@
 # PdfSanitizer
 Hackathon Things
 ToDo List:
-	Implement Utilities
-	Implement UploadToS3
-	Implement Function.cs
 	Implement cCVE_2009_3459
 	Code Review
 	Add Documentation
