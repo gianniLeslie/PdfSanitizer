@@ -6,3 +6,6 @@ C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcorea
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcoreapp2.1\PDFSanitizer.csproj.CoreCompileInputs.cache
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcoreapp2.1\PDFSanitizer.AssemblyInfoInputs.cache
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcoreapp2.1\PDFSanitizer.AssemblyInfo.cs
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\bin\Debug\netcoreapp2.1\PDFSanitizer.pdb
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcoreapp2.1\PDFSanitizer.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer\obj\Debug\netcoreapp2.1\PDFSanitizer.pdb

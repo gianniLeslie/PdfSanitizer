@@ -3,3 +3,15 @@ C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\ne
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.csproj.CoreCompileInputs.cache
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.AssemblyInfoInputs.cache
 C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.AssemblyInfo.cs
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\xunit.runner.reporters.netcoreapp10.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\xunit.runner.utility.netcoreapp10.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.Tests.deps.json
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.Tests.runtimeconfig.json
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.Tests.runtimeconfig.dev.json
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.Tests.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.Tests.pdb
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\bin\Debug\netcoreapp2.1\PDFSanitizer.pdb
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.csproj.CopyComplete
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.dll
+C:\GIT\PdfSanitizer(1)\PDFSanitizer\PDFSanitizer\PDFSanitizer.Tests\obj\Debug\netcoreapp2.1\PDFSanitizer.Tests.pdb

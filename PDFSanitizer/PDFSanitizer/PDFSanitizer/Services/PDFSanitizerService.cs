@@ -31,7 +31,7 @@ namespace PDFSanitizer.Services
                 HexCode = false,
                 Word = String.Empty,
                 WordExact = new List<char>(),
-                LastName = String.Empty,
+                LastKeyword = String.Empty,
                 Slash = Char.MinValue,
 
             };
@@ -141,7 +141,7 @@ namespace PDFSanitizer.Services
             {
                 if (pdfInfo.Slash == '/')
                 {
-                    pdfInfo.LastName = pdfInfo.Slash + pdfInfo.Word;
+                    pdfInfo.LastKeyword = pdfInfo.Slash + pdfInfo.Word;
                 }
                 else if (pdfInfo.Word == "stream")
                 {
@@ -155,6 +155,7 @@ namespace PDFSanitizer.Services
 
                 if (outputFile != null)
                 {
+                    //pdfInfo.LastKeyWord?
                     if (pdfInfo.Slash == '/' && _badKeywords.Contains(pdfInfo.Slash + pdfInfo.Word))
                     {
                         string wordExactSwapped = Utilities.SwapName(pdfInfo.WordExact);
@@ -181,7 +182,7 @@ namespace PDFSanitizer.Services
     {
         public string Word { get; set; }
         public List<char> WordExact { get; set; }
-        public string LastName { get; set; }
+        public string LastKeyword { get; set; }
         public char Slash { get; set; }
         public bool InsideStream { get; set; }
         public bool HexCode { get; set; }
@@ -191,7 +192,7 @@ namespace PDFSanitizer.Services
             HexCode = false;
             InsideStream = false;
             Word = String.Empty;
-            LastName = String.Empty;
+            LastKeyword = String.Empty;
             Slash = Char.MinValue;
             WordExact = new List<char>();
         }
